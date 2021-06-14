@@ -1,14 +1,15 @@
 CC = g++
 CFLAGS = -Wall -g
+LIBS = -lsfml-graphics -lsfml-window -lsfml-system
+SRCS = _main.cpp App.cpp Match.cpp
+OBJS = $(SRCS:.c=.o)
+MAIN = ludo-game
 
-ludo-game: _main.o App.o Match.o -lsfml-graphics -lsfml-window -lsfml-system
-	$(CC) $(CFLAGS) -o ludo-game _main.o App.o Match.o -lsfml-graphics -lsfml-window -lsfml-system
+all: $(MAIN)
 
-_main.o: _main.cpp App.cpp
-	$(CC) $(CFLAGS) -c _main.cpp App.cpp
+$(MAIN): $(OBJS) 
+		$(CC) $(CFLAGS) -o $(MAIN) $(OBJS) $(LIBS)
 
-App.o: App.cpp
-	$(CC) $(CFLAGS) -c App.cpp
+.c.o:	$(CC) $(CFLAGS) -c $<  -o $@
 
-Match.o: Match.cpp
-	$(CC) $(CFLAGS) -c Match.cpp
+clean:	$(RM) *.o *~ $(MAIN)
