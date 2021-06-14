@@ -15,6 +15,10 @@ void App::appLoop()
         case MENU:
             menu();
             break;
+
+        case MATCH:
+            startMatch();
+            break;
         
         default:
             break;
@@ -41,6 +45,12 @@ void App::menu()
             {
                 window.close();
                 state = EXIT;
+                break;
+            }
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
+            {
+                state = MATCH;
+                break;
             }
         }
 
@@ -48,4 +58,11 @@ void App::menu()
         window.draw(title);
         window.display();
     }
+}
+
+void App::startMatch()
+{
+    Match match;
+    match.runMatch(window);
+    state = MENU;
 }

@@ -2,12 +2,14 @@
 #define APP_HPP
 
 #include <SFML/Graphics.hpp>
+#include "Match.hpp"
 
 class App
 {
 public:
     App();
     void appLoop();
+
 private:
     enum AppState
     {
@@ -19,6 +21,7 @@ private:
     sf::RenderWindow window;
 
     void menu();
+    void startMatch();
 };
 
 #endif
