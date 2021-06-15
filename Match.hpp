@@ -2,6 +2,8 @@
 #define MATCH_HPP
 
 #include <SFML/Graphics.hpp>
+#include <cstdlib>
+#include <ctime>
 
 class Match
 {
@@ -13,7 +15,9 @@ public:
 private:
     enum MatchState {PLAY, END};
     MatchState state;
-
+    int playersNumber;
+    int whoseTurn;
+    int rollDice();
 };
 
 #endif
