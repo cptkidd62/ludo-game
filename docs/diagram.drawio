@@ -41,7 +41,7 @@
                 <mxCell id="25" value="# mod : int" style="text;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=#f0f0f0;" parent="24" vertex="1">
                     <mxGeometry y="26" width="220" height="34" as="geometry"/>
                 </mxCell>
-                <mxCell id="26" value="+ makeMove(match : Match&amp;) : void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="24" vertex="1">
+                <mxCell id="26" value="+ makeMove(pieces : list&lt;int&gt;&amp;) : void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="24" vertex="1">
                     <mxGeometry y="60" width="220" height="48" as="geometry"/>
                 </mxCell>
                 <mxCell id="74" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;endArrow=diamond;endFill=1;endSize=12;" parent="1" source="29" target="51" edge="1">
@@ -65,13 +65,13 @@
                     <mxGeometry y="100" width="210" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="33" value="Match" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
-                    <mxGeometry x="530" y="830" width="280" height="210" as="geometry"/>
+                    <mxGeometry x="530" y="830" width="280" height="240" as="geometry"/>
                 </mxCell>
-                <mxCell id="34" value="- state : enum MatchState&#10;- players : list&lt;Player*&gt;&#10;- pieces : list&lt;int&gt;&#10;- playersNumber : int&#10;- whoseTurn : int&#10;- diceResult : int&#10;- winner : int" style="text;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=#f0f0f0;" parent="33" vertex="1">
-                    <mxGeometry y="26" width="280" height="114" as="geometry"/>
+                <mxCell id="34" value="- state : enum MatchState&#10;- players : list&lt;Player*&gt;&#10;- pieces : list&lt;int&gt;&#10;- piecesSprites : list&lt;Sprite&gt;&#10;- boardRects : list&lt;Rectangle&gt;&#10;- playersNumber : int&#10;- whoseTurn : int&#10;- diceResult : int&#10;- winner : int" style="text;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=#f0f0f0;" parent="33" vertex="1">
+                    <mxGeometry y="26" width="280" height="144" as="geometry"/>
                 </mxCell>
                 <mxCell id="35" value="+ runMatch(window : RenderWindow&amp;) : void&#10;- rollDice() : int&#10;- checkPossible(id1 : int, id2 : int, delta : int) : bool&#10;- move(id : int) : void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="33" vertex="1">
-                    <mxGeometry y="140" width="280" height="70" as="geometry"/>
+                    <mxGeometry y="170" width="280" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="75" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=diamond;endFill=1;endSize=12;" parent="1" source="47" target="21" edge="1">
                     <mxGeometry relative="1" as="geometry">
@@ -105,13 +105,13 @@
                 <mxCell id="62" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;endSize=12;" parent="1" source="54" target="24" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="54" value="AggressiveAIPlayer" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
+                <mxCell id="54" value="NormalAIPlayer" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
                     <mxGeometry x="330" y="50" width="260" height="128" as="geometry"/>
                 </mxCell>
                 <mxCell id="55" value="" style="text;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=#f0f0f0;" parent="54" vertex="1">
                     <mxGeometry y="26" width="260" height="44" as="geometry"/>
                 </mxCell>
-                <mxCell id="56" value="+ makeMove(match : Match&amp;) : void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="54" vertex="1">
+                <mxCell id="56" value="+ makeMove(pieces : list&lt;int&gt;&amp;) : void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="54" vertex="1">
                     <mxGeometry y="70" width="260" height="58" as="geometry"/>
                 </mxCell>
                 <mxCell id="63" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;endSize=12;" parent="1" source="58" target="24" edge="1">
@@ -123,7 +123,7 @@
                 <mxCell id="59" value="" style="text;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=#f0f0f0;" parent="58" vertex="1">
                     <mxGeometry y="26" width="260" height="44" as="geometry"/>
                 </mxCell>
-                <mxCell id="60" value="+ makeMove(match : Match&amp;) : void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="58" vertex="1">
+                <mxCell id="60" value="+ makeMove(pieces : list&lt;int&gt;&amp;) : void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="58" vertex="1">
                     <mxGeometry y="70" width="260" height="58" as="geometry"/>
                 </mxCell>
                 <mxCell id="73" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=diamond;endFill=1;endSize=12;" parent="1" source="64" target="68" edge="1">
