@@ -3,7 +3,7 @@
 App::App()
 {
     state = MENU;
-    window.create(sf::VideoMode(200, 200), "Ludo Game");
+    window.create(sf::VideoMode(1000, 800), "Ludo Game");
 }
 
 void App::appLoop()

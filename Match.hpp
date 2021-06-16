@@ -17,6 +17,8 @@ private:
     MatchState state;
     int playersNumber;
     int whoseTurn;
+    std::vector<sf::RectangleShape> boardRects;
+
     int rollDice();
 };
 
