@@ -1,6 +1,6 @@
 <mxfile>
     <diagram id="9kymOdjuQ2-MlsJ7cjZn" name="Page-1">
-        <mxGraphModel dx="1382" dy="632" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1764" dy="771" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -78,7 +78,7 @@
                 <mxCell id="47" value="UserData" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
                     <mxGeometry x="750" y="495" width="280" height="180" as="geometry"/>
                 </mxCell>
-                <mxCell id="48" value="- id : int&#10;- gamesNumber : int&#10;- victoriesNumber : int" style="text;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=#f0f0f0;" parent="47" vertex="1">
+                <mxCell id="48" value="- name : string&#10;- gamesNumber : int&#10;- victoriesNumber : int" style="text;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=#f0f0f0;" parent="47" vertex="1">
                     <mxGeometry y="26" width="280" height="84" as="geometry"/>
                 </mxCell>
                 <mxCell id="49" value="+ loadFromFile() : bool&#10;+ saveToFile() : bool" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="47" vertex="1">
