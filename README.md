@@ -7,7 +7,7 @@ This is an implementation of the well-known ludo game using C++ and SFML
 * play alone with computer (2 different AI strategies)
 * play with up to 3 friends in hot-seat mode
 * browse stats of every user - let's see who's the best!
-
+---
 # Chińczyk
 
 Implementacja gry chińczyk w C++ z użyciem biblioteki SFML
