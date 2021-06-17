@@ -3,7 +3,7 @@ CFLAGS = -Wall -g
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system
 SRCS = _main.cpp App.cpp Match.cpp
 OBJS = $(SRCS:.c=.o)
-MAIN = ludo-game
+MAIN = ludo-game.exe
 
 all: $(MAIN)
 
