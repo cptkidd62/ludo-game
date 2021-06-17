@@ -17,7 +17,10 @@ private:
     MatchState state;
     int playersNumber;
     int whoseTurn;
-    std::vector<sf::RectangleShape> boardRects;
+    int finishedCount;
+    std::vector<sf::RectangleShape> boardTiles;
+    std::vector<sf::RectangleShape> holderTiles;
+    std::vector<sf::RectangleShape> homeTiles;
 
     int rollDice();
 };

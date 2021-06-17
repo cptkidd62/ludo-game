@@ -47,6 +47,12 @@ void App::menu()
                 state = EXIT;
                 break;
             }
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape)
+            {
+                window.close();
+                state = EXIT;
+                break;
+            }
             if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
             {
                 state = MATCH;
