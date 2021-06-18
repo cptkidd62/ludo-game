@@ -156,7 +156,7 @@ bool Match::movePossible(int id, int delta)
         }
         for (int i = 0; i < 16; i++)
         {
-            if (i != id && (pieces[id] + delta > 43 || (pieces[id] + 10 * whoseTurn) % 40 + delta == (pieces[i] + 10 * whoseTurn) % 40))
+            if (pieces[id] + delta > 43 || (id != i && (pieces[id] + 10 * whoseTurn + delta) % 40 == (pieces[i] + 10 * (i / 4)) % 40))
                 return false;
         }
         return true;
