@@ -21,6 +21,7 @@ private:
     std::vector<sf::RectangleShape> boardTiles;
     std::vector<sf::RectangleShape> holderTiles;
     std::vector<sf::RectangleShape> homeTiles;
+    std::vector<sf::CircleShape> piecesShape;
 
     int rollDice();
 };

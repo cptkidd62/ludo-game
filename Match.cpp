@@ -35,6 +35,13 @@ Match::Match()
             tmp.setPosition(holdesCoords[i * 4 + j].x * (edge + 2 * lineBoldness) + offsetx, holdesCoords[i * 4 + j].y * (edge + 2 * lineBoldness) + offsety);
             holderTiles.push_back(tmp);
             tmp.setOutlineColor(sf::Color::Black);
+            sf::CircleShape circle;
+            circle.setFillColor(colors[i]);
+            circle.setOutlineColor(sf::Color::Black);
+            circle.setOutlineThickness(lineBoldness);
+            circle.setRadius(edge/2);
+            circle.setPosition(holdesCoords[i * 4 + j].x * (edge + 2 * lineBoldness) + offsetx, holdesCoords[i * 4 + j].y * (edge + 2 * lineBoldness) + offsety);
+            piecesShape.push_back(circle);
         }
     }
     state = PLAY;
@@ -89,6 +96,7 @@ void Match::runMatch(sf::RenderWindow &window)
         {
             window.draw(holderTiles[i]);
             window.draw(homeTiles[i]);
+            window.draw(piecesShape[i]);
         }
         window.display();
     }
