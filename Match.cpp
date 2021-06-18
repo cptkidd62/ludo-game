@@ -104,10 +104,8 @@ void Match::runMatch(sf::RenderWindow &window)
             {
                 if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && piecesShape[4 * whoseTurn + i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
                 {
-                    std::cout << "clicked" << std::endl;
                     if (movePossible(4 * whoseTurn + i, diceResult))
                     {
-                        std::cout << "move possible" << std::endl;
                         movePiece(4 * whoseTurn + i, diceResult);
                         whoseTurn = (whoseTurn + 1) % playersNumber;
                         currentPlayer.setString("Player " + std::to_string(whoseTurn + 1) + " turn");
@@ -176,7 +174,7 @@ void Match::movePiece(int id, int delta)
     }
     if (pieces[id] > 39)
     {
-        piecesShape[id].setPosition(homeTiles[whoseTurn * (abs(39 - pieces[id]))].getPosition());
+        piecesShape[id].setPosition(homeTiles[whoseTurn * 4 + (abs(39 - pieces[id]))].getPosition());
     }
     else
     {
