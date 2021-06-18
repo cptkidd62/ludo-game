@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 class Match
 {
@@ -18,12 +19,16 @@ private:
     int playersNumber;
     int whoseTurn;
     int finishedCount;
+    int diceResult;
     std::vector<sf::RectangleShape> boardTiles;
     std::vector<sf::RectangleShape> holderTiles;
     std::vector<sf::RectangleShape> homeTiles;
     std::vector<sf::CircleShape> piecesShape;
+    std::vector<int> pieces;
 
     int rollDice();
+    bool movePossible(int id, int delta);
+    void movePiece(int id, int delta);
 };
 
 #endif

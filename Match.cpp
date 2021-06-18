@@ -3,7 +3,7 @@
 Match::Match()
 {
     playersNumber = 4;
-    whoseTurn = 1;
+    whoseTurn = 0;
     finishedCount = 0;
     sf::Vector2f boardTilesCoords[40] = {{4, 10}, {4, 9}, {4, 8}, {4, 7}, {4, 6}, {3, 6}, {2, 6}, {1, 6}, {0, 6}, {0, 5}, {0, 4}, {1, 4}, {2, 4}, {3, 4}, {4, 4}, {4, 3}, {4, 2}, {4, 1}, {4, 0}, {5, 0}, {6, 0}, {6, 1}, {6, 2}, {6, 3}, {6, 4}, {7, 4}, {8, 4}, {9, 4}, {10, 4}, {10, 5}, {10, 6}, {9, 6}, {8, 6}, {7, 6}, {6, 6}, {6, 7}, {6, 8}, {6, 9}, {6, 10}, {5, 10}};
     sf::Vector2f holdesCoords[16] = {{1, 8}, {2, 8}, {2, 9}, {1, 9}, {1, 1}, {2, 1}, {2, 2}, {1, 2}, {8, 1}, {9, 1}, {9, 2}, {8, 2}, {8, 8}, {9, 8}, {9, 9}, {8, 9}};
@@ -39,10 +39,14 @@ Match::Match()
             circle.setFillColor(colors[i]);
             circle.setOutlineColor(sf::Color::Black);
             circle.setOutlineThickness(lineBoldness);
-            circle.setRadius(edge/2);
+            circle.setRadius(edge / 2);
             circle.setPosition(holdesCoords[i * 4 + j].x * (edge + 2 * lineBoldness) + offsetx, holdesCoords[i * 4 + j].y * (edge + 2 * lineBoldness) + offsety);
             piecesShape.push_back(circle);
         }
+    }
+    for (int i = 0; i < 16; i++)
+    {
+        pieces.push_back(-1);
     }
     state = PLAY;
 }
@@ -53,7 +57,7 @@ void Match::runMatch(sf::RenderWindow &window)
     font.loadFromFile("resources/AmaticSC-Bold.ttf");
 
     sf::Text currentPlayer;
-    currentPlayer.setString("Player " + std::to_string(whoseTurn) + " turn");
+    currentPlayer.setString("Player " + std::to_string(whoseTurn + 1) + " turn");
     currentPlayer.setFont(font);
     currentPlayer.setCharacterSize(30);
     currentPlayer.setPosition(30, 30);
@@ -78,10 +82,24 @@ void Match::runMatch(sf::RenderWindow &window)
             }
             if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
             {
-                diceResultText.setString("Dice result: " + std::to_string(rollDice()));
-                whoseTurn = whoseTurn % playersNumber + 1;
-                currentPlayer.setString("Player " + std::to_string(whoseTurn) + " turn");
+                diceResult = 6; //FIXME
+                diceResultText.setString("Dice result: " + std::to_string(diceResult));
                 break;
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && piecesShape[4 * whoseTurn + i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                {
+                    std::cout << "clicked" << std::endl;
+                    if (movePossible(4 * whoseTurn + i, diceResult))
+                    {
+                        std::cout << "move possible" << std::endl;
+                        movePiece(4 * whoseTurn + i, diceResult);
+                        whoseTurn = (whoseTurn + 1) % playersNumber;
+                        currentPlayer.setString("Player " + std::to_string(whoseTurn + 1) + " turn");
+                    }
+                    break;
+                }
             }
         }
 
@@ -96,6 +114,9 @@ void Match::runMatch(sf::RenderWindow &window)
         {
             window.draw(holderTiles[i]);
             window.draw(homeTiles[i]);
+        }
+        for (int i = 0; i < 16; i++)
+        {
             window.draw(piecesShape[i]);
         }
         window.display();
@@ -106,4 +127,44 @@ int Match::rollDice()
 {
     srand(time(0));
     return rand() % 6 + 1;
+}
+
+bool Match::movePossible(int id, int delta)
+{
+    if (id / 4 == whoseTurn)
+    {
+        if (pieces[id] == -1)
+        {
+            if (delta == 6)
+                return true;
+            return false;
+        }
+        for (int i = 0; i < 16; i++)
+        {
+            if (i != id && (pieces[id] + delta > 43 || (pieces[id] + 10 * whoseTurn) % 40 + delta == (pieces[i] + 10 * whoseTurn) % 40))
+                return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+void Match::movePiece(int id, int delta)
+{
+    if (pieces[id] == -1)
+    {
+        pieces[id] = 0;
+    }
+    else
+    {
+        pieces[id] += delta;
+    }
+    if (pieces[id] > 39)
+    {
+        piecesShape[id].setPosition(homeTiles[whoseTurn * (abs(39 - pieces[id]))].getPosition());
+    }
+    else
+    {
+        piecesShape[id].setPosition(boardTiles[(pieces[id] + 10 * whoseTurn) % 40].getPosition());
+    }
 }
