@@ -26,6 +26,8 @@ private:
     std::vector<sf::CircleShape> piecesShape;
     std::vector<int> pieces;
 
+    const sf::Color colors[4] = {sf::Color::Yellow, sf::Color::Red, sf::Color::Blue, sf::Color::Green};
+
     int rollDice();
     bool movePossible(int id, int delta);
     void movePiece(int id, int delta);

@@ -2,22 +2,33 @@
 
 Match::Match()
 {
+    // initializing initial state variables
     playersNumber = 4;
     whoseTurn = 0;
     finishedCount = 0;
+
+    // tiles coordinates
     sf::Vector2f boardTilesCoords[40] = {{4, 10}, {4, 9}, {4, 8}, {4, 7}, {4, 6}, {3, 6}, {2, 6}, {1, 6}, {0, 6}, {0, 5}, {0, 4}, {1, 4}, {2, 4}, {3, 4}, {4, 4}, {4, 3}, {4, 2}, {4, 1}, {4, 0}, {5, 0}, {6, 0}, {6, 1}, {6, 2}, {6, 3}, {6, 4}, {7, 4}, {8, 4}, {9, 4}, {10, 4}, {10, 5}, {10, 6}, {9, 6}, {8, 6}, {7, 6}, {6, 6}, {6, 7}, {6, 8}, {6, 9}, {6, 10}, {5, 10}};
     sf::Vector2f holdesCoords[16] = {{1, 8}, {2, 8}, {2, 9}, {1, 9}, {1, 1}, {2, 1}, {2, 2}, {1, 2}, {8, 1}, {9, 1}, {9, 2}, {8, 2}, {8, 8}, {9, 8}, {9, 9}, {8, 9}};
     sf::Vector2f homeCoords[16] = {{5, 9}, {5, 8}, {5, 7}, {5, 6}, {1, 5}, {2, 5}, {3, 5}, {4, 5}, {5, 1}, {5, 2}, {5, 3}, {5, 4}, {9, 5}, {8, 5}, {7, 5}, {6, 5}};
-    sf::Color colors[4] = {sf::Color::Yellow, sf::Color::Red, sf::Color::Blue, sf::Color::Green};
+
+    // drawing values
     int edge = 68;
     int lineBoldness = 1;
     int offsetx = 100;
     int offsety = 10;
+
+    // temporary rectangle and circle shape
     sf::RectangleShape tmp;
     tmp.setSize(sf::Vector2f(edge, edge));
     tmp.setFillColor(sf::Color::White);
     tmp.setOutlineColor(sf::Color::Black);
     tmp.setOutlineThickness(lineBoldness);
+    sf::CircleShape circle;
+    circle.setOutlineColor(sf::Color::Black);
+    circle.setOutlineThickness(lineBoldness);
+    circle.setRadius(edge / 2);
+    // adding shapes to vector
     for (int i = 0; i < 4; i++)
     {
         for (int j = 0; j < 10; j++)
@@ -35,15 +46,12 @@ Match::Match()
             tmp.setPosition(holdesCoords[i * 4 + j].x * (edge + 2 * lineBoldness) + offsetx, holdesCoords[i * 4 + j].y * (edge + 2 * lineBoldness) + offsety);
             holderTiles.push_back(tmp);
             tmp.setOutlineColor(sf::Color::Black);
-            sf::CircleShape circle;
             circle.setFillColor(colors[i]);
-            circle.setOutlineColor(sf::Color::Black);
-            circle.setOutlineThickness(lineBoldness);
-            circle.setRadius(edge / 2);
             circle.setPosition(holdesCoords[i * 4 + j].x * (edge + 2 * lineBoldness) + offsetx, holdesCoords[i * 4 + j].y * (edge + 2 * lineBoldness) + offsety);
             piecesShape.push_back(circle);
         }
     }
+    // initializing pieces position
     for (int i = 0; i < 16; i++)
     {
         pieces.push_back(-1);
@@ -53,9 +61,11 @@ Match::Match()
 
 void Match::runMatch(sf::RenderWindow &window)
 {
+    // loading font
     sf::Font font;
     font.loadFromFile("resources/AmaticSC-Bold.ttf");
 
+    // creating texts
     sf::Text currentPlayer;
     currentPlayer.setString("Player " + std::to_string(whoseTurn + 1) + " turn");
     currentPlayer.setFont(font);
@@ -70,22 +80,26 @@ void Match::runMatch(sf::RenderWindow &window)
     diceResultText.setPosition(30, 100);
     diceResultText.setFillColor(sf::Color::Yellow);
 
+    // game loop
     while (state != END)
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
+            // end game
             if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape)
             {
                 state = END;
                 break;
             }
+            // roll dice
             if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
             {
                 diceResult = 6; //FIXME
                 diceResultText.setString("Dice result: " + std::to_string(diceResult));
                 break;
             }
+            // checking for clicking on pieces
             for (int i = 0; i < 4; i++)
             {
                 if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && piecesShape[4 * whoseTurn + i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
@@ -103,6 +117,7 @@ void Match::runMatch(sf::RenderWindow &window)
             }
         }
 
+        // drawing
         window.clear();
         window.draw(currentPlayer);
         window.draw(diceResultText);
