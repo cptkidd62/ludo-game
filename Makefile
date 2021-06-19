@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -Wall -g
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system
-SRCS = _main.cpp App.cpp Match.cpp
+SRCS = _main.cpp App.cpp Match.cpp Player.cpp HumanPlayer.cpp
 OBJS = $(SRCS:.c=.o)
 MAIN = ludo-game.exe
 

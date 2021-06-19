@@ -8,6 +8,12 @@ Match::Match()
     finishedCount = 0;
     diceResult = 0;
 
+    // creating players
+    for (int i = 0; i < playersNumber; i++)
+    {
+        players.push_back(new HumanPlayer(L"Człowiek " + std::to_wstring(i + 1)));
+    }
+
     // tiles coordinates
     sf::Vector2f boardTilesCoords[40] = {{4, 10}, {4, 9}, {4, 8}, {4, 7}, {4, 6}, {3, 6}, {2, 6}, {1, 6}, {0, 6}, {0, 5}, {0, 4}, {1, 4}, {2, 4}, {3, 4}, {4, 4}, {4, 3}, {4, 2}, {4, 1}, {4, 0}, {5, 0}, {6, 0}, {6, 1}, {6, 2}, {6, 3}, {6, 4}, {7, 4}, {8, 4}, {9, 4}, {10, 4}, {10, 5}, {10, 6}, {9, 6}, {8, 6}, {7, 6}, {6, 6}, {6, 7}, {6, 8}, {6, 9}, {6, 10}, {5, 10}};
     sf::Vector2f holdesCoords[16] = {{1, 8}, {2, 8}, {2, 9}, {1, 9}, {1, 1}, {2, 1}, {2, 2}, {1, 2}, {8, 1}, {9, 1}, {9, 2}, {8, 2}, {8, 8}, {9, 8}, {9, 9}, {8, 9}};
@@ -68,7 +74,7 @@ void Match::runMatch(sf::RenderWindow &window)
 
     // creating texts
     sf::Text currentPlayer;
-    currentPlayer.setString("Player " + std::to_string(whoseTurn + 1) + " turn");
+    currentPlayer.setString(players[whoseTurn]->getName() + L"'s turn");
     currentPlayer.setFont(font);
     currentPlayer.setCharacterSize(30);
     currentPlayer.setPosition(30, 30);
@@ -110,7 +116,7 @@ void Match::runMatch(sf::RenderWindow &window)
                 if (!canMove)
                 {
                     whoseTurn = (whoseTurn + 1) % playersNumber;
-                    currentPlayer.setString("Player " + std::to_string(whoseTurn + 1) + " turn");
+                    currentPlayer.setString(players[whoseTurn]->getName() + L"'s turn");
                     diceResultText.setString("");
                     diceResult = 0;
                 }
@@ -127,7 +133,7 @@ void Match::runMatch(sf::RenderWindow &window)
                         if (diceResult != 6)
                         {
                             whoseTurn = (whoseTurn + 1) % playersNumber;
-                            currentPlayer.setString("Player " + std::to_string(whoseTurn + 1) + " turn");
+                            currentPlayer.setString(players[whoseTurn]->getName() + L"'s turn");
                             diceResultText.setString("");
                         }
                         diceResult = 0;

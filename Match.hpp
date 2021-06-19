@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
+#include "HumanPlayer.hpp"
 
 class Match
 {
@@ -14,12 +14,17 @@ public:
     void runMatch(sf::RenderWindow &window);
 
 private:
-    enum MatchState {PLAY, END};
+    enum MatchState
+    {
+        PLAY,
+        END
+    };
     MatchState state;
     int playersNumber;
     int whoseTurn;
     int finishedCount;
     int diceResult;
+    std::vector<Player *> players;
     std::vector<sf::RectangleShape> boardTiles;
     std::vector<sf::RectangleShape> holderTiles;
     std::vector<sf::RectangleShape> homeTiles;
@@ -32,5 +37,11 @@ private:
     bool movePossible(int id, int delta);
     void movePiece(int id, int delta);
 };
+
+template <typename Base, typename T>
+inline bool instanceof (const T *)
+{
+    return std::is_base_of<Base, T>::value;
+}
 
 #endif
