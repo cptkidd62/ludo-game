@@ -6,6 +6,7 @@ Match::Match()
     playersNumber = 4;
     whoseTurn = 0;
     finishedCount = 0;
+    diceResult = 0;
 
     // tiles coordinates
     sf::Vector2f boardTilesCoords[40] = {{4, 10}, {4, 9}, {4, 8}, {4, 7}, {4, 6}, {3, 6}, {2, 6}, {1, 6}, {0, 6}, {0, 5}, {0, 4}, {1, 4}, {2, 4}, {3, 4}, {4, 4}, {4, 3}, {4, 2}, {4, 1}, {4, 0}, {5, 0}, {6, 0}, {6, 1}, {6, 2}, {6, 3}, {6, 4}, {7, 4}, {8, 4}, {9, 4}, {10, 4}, {10, 5}, {10, 6}, {9, 6}, {8, 6}, {7, 6}, {6, 6}, {6, 7}, {6, 8}, {6, 9}, {6, 10}, {5, 10}};
@@ -93,22 +94,43 @@ void Match::runMatch(sf::RenderWindow &window)
                 break;
             }
             // roll dice
-            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
+            if (diceResult == 0 && event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
             {
-                diceResult = 6; //FIXME
+                diceResult = rollDice();
                 diceResultText.setString("Dice result: " + std::to_string(diceResult));
+                bool canMove = false;
+                for (int i = 0; i < 4; i++)
+                {
+                    if (movePossible(4 * whoseTurn + i, diceResult))
+                    {
+                        canMove = true;
+                        break;
+                    }
+                }
+                if (!canMove)
+                {
+                    whoseTurn = (whoseTurn + 1) % playersNumber;
+                    currentPlayer.setString("Player " + std::to_string(whoseTurn + 1) + " turn");
+                    diceResultText.setString("");
+                    diceResult = 0;
+                }
                 break;
             }
             // checking for clicking on pieces
             for (int i = 0; i < 4; i++)
             {
-                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && piecesShape[4 * whoseTurn + i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                if (diceResult != 0 && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && piecesShape[4 * whoseTurn + i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
                 {
                     if (movePossible(4 * whoseTurn + i, diceResult))
                     {
                         movePiece(4 * whoseTurn + i, diceResult);
-                        whoseTurn = (whoseTurn + 1) % playersNumber;
-                        currentPlayer.setString("Player " + std::to_string(whoseTurn + 1) + " turn");
+                        if (diceResult != 6)
+                        {
+                            whoseTurn = (whoseTurn + 1) % playersNumber;
+                            currentPlayer.setString("Player " + std::to_string(whoseTurn + 1) + " turn");
+                            diceResultText.setString("");
+                        }
+                        diceResult = 0;
                     }
                     break;
                 }
@@ -154,7 +176,7 @@ bool Match::movePossible(int id, int delta)
         }
         for (int i = 0; i < 16; i++)
         {
-            if (pieces[id] + delta > 43 || (id != i && (pieces[id] + 10 * whoseTurn + delta) % 40 == (pieces[i] + 10 * (i / 4)) % 40))
+            if (pieces[id] + delta > 43 || (id / 4 == i / 4 && (pieces[id] + 10 * whoseTurn + delta) % 40 == (pieces[i] + 10 * (i / 4)) % 40 && pieces[i] > -1 && pieces[i] < 40))
                 return false;
         }
         return true;
@@ -171,10 +193,25 @@ void Match::movePiece(int id, int delta)
     else
     {
         pieces[id] += delta;
+        if (pieces[id] < 40)
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                if (id / 4 != i / 4)
+                {
+                    if ((pieces[id] + 10 * whoseTurn) % 40 == (pieces[i] + 10 * (i / 4)) % 40)
+                    {
+                        pieces[i] = -1;
+                        piecesShape[i].setPosition(holderTiles[i].getPosition());
+                        break;
+                    }
+                }
+            }
+        }
     }
     if (pieces[id] > 39)
     {
-        piecesShape[id].setPosition(homeTiles[whoseTurn * 4 + (abs(39 - pieces[id]))].getPosition());
+        piecesShape[id].setPosition(homeTiles[whoseTurn * 4 + (pieces[id] - 39)].getPosition());
     }
     else
     {
