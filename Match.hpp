@@ -9,7 +9,7 @@
 class Match
 {
 public:
-    Match();
+    Match(std::initializer_list<int> ps);
 
     void runMatch(sf::RenderWindow &window);
 
@@ -22,6 +22,7 @@ private:
     MatchState state;
     int playersNumber;
     int whoseTurn;
+    bool finishedTurn;
     int finishedCount;
     int diceResult;
     std::vector<Player *> players;

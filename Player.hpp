@@ -7,9 +7,12 @@ class Player
 {
 public:
     std::wstring getName();
+    bool hasFinished();
+    void setFinished();
 
 protected:
     std::wstring name;
+    bool finished;
 };
 
 #endif

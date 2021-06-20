@@ -1,17 +1,33 @@
 #include "Match.hpp"
 
-Match::Match()
+Match::Match(std::initializer_list<int> ps)
 {
     // initializing initial state variables
-    playersNumber = 4;
+    playersNumber = 0;
     whoseTurn = 0;
+    finishedTurn = false;
     finishedCount = 0;
     diceResult = 0;
 
     // creating players
-    for (int i = 0; i < playersNumber; i++)
+    for (int i = 0; i < 4; i++)
     {
-        players.push_back(new HumanPlayer(L"Człowiek " + std::to_wstring(i + 1)));
+        if (*(ps.begin() + i) > 0)
+        {
+            players.push_back(new HumanPlayer(L"Człowiek " + std::to_wstring(i + 1)));
+            playersNumber++;
+        }
+        else if (*(ps.begin() + i) < 0)
+        {
+            //TODO ai player
+            playersNumber++;
+        }
+        else
+        {
+            players.push_back(nullptr);
+            if (whoseTurn == i)
+                whoseTurn++;
+        }
     }
 
     // tiles coordinates
@@ -87,6 +103,13 @@ void Match::runMatch(sf::RenderWindow &window)
     diceResultText.setPosition(30, 100);
     diceResultText.setFillColor(sf::Color::Yellow);
 
+    sf::Text button;
+    button.setString("Roll the dice");
+    button.setFont(font);
+    button.setCharacterSize(30);
+    button.setPosition(30, 170);
+    button.setFillColor(sf::Color::Yellow);
+
     // game loop
     while (state != END)
     {
@@ -99,46 +122,61 @@ void Match::runMatch(sf::RenderWindow &window)
                 state = END;
                 break;
             }
-            // roll dice
-            if (diceResult == 0 && event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
+            // check mouse button click
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
             {
-                diceResult = rollDice();
-                diceResultText.setString("Dice result: " + std::to_string(diceResult));
-                bool canMove = false;
-                for (int i = 0; i < 4; i++)
+                // check roll/next button
+                if (button.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
                 {
-                    if (movePossible(4 * whoseTurn + i, diceResult))
+                    // roll the dice
+                    if (diceResult == 0 && !finishedTurn)
                     {
-                        canMove = true;
+                        diceResult = rollDice();
+                        diceResultText.setString("Dice result: " + std::to_string(diceResult));
+                        bool canMove = false;
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if (movePossible(4 * whoseTurn + i, diceResult))
+                            {
+                                canMove = true;
+                                break;
+                            }
+                        }
+                        if (!canMove)
+                        {
+                            diceResult = 0;
+                            finishedTurn = true;
+                            button.setString("Next");
+                        }
                         break;
                     }
-                }
-                if (!canMove)
-                {
-                    whoseTurn = (whoseTurn + 1) % playersNumber;
-                    currentPlayer.setString(players[whoseTurn]->getName() + L"'s turn");
-                    diceResultText.setString("");
-                    diceResult = 0;
-                }
-                break;
-            }
-            // checking for clicking on pieces
-            for (int i = 0; i < 4; i++)
-            {
-                if (diceResult != 0 && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && piecesShape[4 * whoseTurn + i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
-                {
-                    if (movePossible(4 * whoseTurn + i, diceResult))
+                    // move to next player
+                    if (finishedTurn)
                     {
-                        movePiece(4 * whoseTurn + i, diceResult);
-                        if (diceResult != 6)
-                        {
-                            whoseTurn = (whoseTurn + 1) % playersNumber;
-                            currentPlayer.setString(players[whoseTurn]->getName() + L"'s turn");
-                            diceResultText.setString("");
-                        }
-                        diceResult = 0;
+                        whoseTurn = (whoseTurn + 1) % playersNumber;
+                        currentPlayer.setString(players[whoseTurn]->getName() + L"'s turn");
+                        diceResultText.setString("");
+                        finishedTurn = false;
+                        button.setString("Roll the dice");
                     }
-                    break;
+                }
+                // check pieces
+                for (int i = 0; i < 4; i++)
+                {
+                    if (diceResult != 0 && !finishedTurn && piecesShape[4 * whoseTurn + i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                    {
+                        if (movePossible(4 * whoseTurn + i, diceResult))
+                        {
+                            movePiece(4 * whoseTurn + i, diceResult);
+                            if (diceResult != 6)
+                            {
+                                finishedTurn = true;
+                                button.setString("Next");
+                            }
+                            diceResult = 0;
+                        }
+                        break;
+                    }
                 }
             }
         }
@@ -147,6 +185,7 @@ void Match::runMatch(sf::RenderWindow &window)
         window.clear();
         window.draw(currentPlayer);
         window.draw(diceResultText);
+        window.draw(button);
         for (int i = 0; i < 40; i++)
         {
             window.draw(boardTiles[i]);
@@ -177,7 +216,16 @@ bool Match::movePossible(int id, int delta)
         if (pieces[id] == -1)
         {
             if (delta == 6)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if (pieces[whoseTurn * 4 + i] == 0)
+                    {
+                        return false;
+                    }
+                }
                 return true;
+            }
             return false;
         }
         for (int i = 0; i < 16; i++)

@@ -68,7 +68,7 @@ void App::menu()
 
 void App::startMatch()
 {
-    Match match;
+    Match match({1, 2, 3, 4});
     match.runMatch(window);
     state = MENU;
 }
