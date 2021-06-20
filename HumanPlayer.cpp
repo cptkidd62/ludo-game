@@ -3,4 +3,5 @@
 HumanPlayer::HumanPlayer(std::wstring namestr)
 {
     name = namestr;
+    finished = false;
 }

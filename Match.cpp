@@ -32,7 +32,7 @@ Match::Match(std::initializer_list<int> ps)
 
     // tiles coordinates
     sf::Vector2f boardTilesCoords[40] = {{4, 10}, {4, 9}, {4, 8}, {4, 7}, {4, 6}, {3, 6}, {2, 6}, {1, 6}, {0, 6}, {0, 5}, {0, 4}, {1, 4}, {2, 4}, {3, 4}, {4, 4}, {4, 3}, {4, 2}, {4, 1}, {4, 0}, {5, 0}, {6, 0}, {6, 1}, {6, 2}, {6, 3}, {6, 4}, {7, 4}, {8, 4}, {9, 4}, {10, 4}, {10, 5}, {10, 6}, {9, 6}, {8, 6}, {7, 6}, {6, 6}, {6, 7}, {6, 8}, {6, 9}, {6, 10}, {5, 10}};
-    sf::Vector2f holdesCoords[16] = {{1, 8}, {2, 8}, {2, 9}, {1, 9}, {1, 1}, {2, 1}, {2, 2}, {1, 2}, {8, 1}, {9, 1}, {9, 2}, {8, 2}, {8, 8}, {9, 8}, {9, 9}, {8, 9}};
+    sf::Vector2f holdersCoords[16] = {{1, 8}, {2, 8}, {2, 9}, {1, 9}, {1, 1}, {2, 1}, {2, 2}, {1, 2}, {8, 1}, {9, 1}, {9, 2}, {8, 2}, {8, 8}, {9, 8}, {9, 9}, {8, 9}};
     sf::Vector2f homeCoords[16] = {{5, 9}, {5, 8}, {5, 7}, {5, 6}, {1, 5}, {2, 5}, {3, 5}, {4, 5}, {5, 1}, {5, 2}, {5, 3}, {5, 4}, {9, 5}, {8, 5}, {7, 5}, {6, 5}};
 
     // drawing values
@@ -66,11 +66,11 @@ Match::Match(std::initializer_list<int> ps)
             homeTiles.push_back(tmp);
             tmp.setOutlineColor(colors[i]);
             tmp.setFillColor(sf::Color::White);
-            tmp.setPosition(holdesCoords[i * 4 + j].x * (edge + 2 * lineBoldness) + offsetx, holdesCoords[i * 4 + j].y * (edge + 2 * lineBoldness) + offsety);
+            tmp.setPosition(holdersCoords[i * 4 + j].x * (edge + 2 * lineBoldness) + offsetx, holdersCoords[i * 4 + j].y * (edge + 2 * lineBoldness) + offsety);
             holderTiles.push_back(tmp);
             tmp.setOutlineColor(sf::Color::Black);
             circle.setFillColor(colors[i]);
-            circle.setPosition(holdesCoords[i * 4 + j].x * (edge + 2 * lineBoldness) + offsetx, holdesCoords[i * 4 + j].y * (edge + 2 * lineBoldness) + offsety);
+            circle.setPosition(holdersCoords[i * 4 + j].x * (edge + 2 * lineBoldness) + offsetx, holdersCoords[i * 4 + j].y * (edge + 2 * lineBoldness) + offsety);
             piecesShape.push_back(circle);
         }
     }
@@ -111,7 +111,7 @@ void Match::runMatch(sf::RenderWindow &window)
     button.setFillColor(sf::Color::Yellow);
 
     // game loop
-    while (state != END)
+    while (state == PLAY)
     {
         sf::Event event;
         while (window.pollEvent(event))
@@ -153,7 +153,10 @@ void Match::runMatch(sf::RenderWindow &window)
                     // move to next player
                     if (finishedTurn)
                     {
-                        whoseTurn = (whoseTurn + 1) % playersNumber;
+                        do
+                        {
+                            whoseTurn = (whoseTurn + 1) % 4;
+                        } while (players[whoseTurn] == nullptr || players[whoseTurn]->hasFinished());
                         currentPlayer.setString(players[whoseTurn]->getName() + L"'s turn");
                         diceResultText.setString("");
                         finishedTurn = false;
@@ -174,6 +177,21 @@ void Match::runMatch(sf::RenderWindow &window)
                                 button.setString("Next");
                             }
                             diceResult = 0;
+                            bool condition = true;
+                            for (int j = 0; j < 4; j++)
+                            {
+                                if (pieces[4 * whoseTurn + j] < 40)
+                                    condition = false;
+                            }
+                            if (condition)
+                            {
+                                players[whoseTurn]->setFinished();
+                                finishedCount++;
+                                if (finishedCount == playersNumber - 1)
+                                {
+                                    state = END;
+                                }
+                            }
                         }
                         break;
                     }
@@ -197,7 +215,8 @@ void Match::runMatch(sf::RenderWindow &window)
         }
         for (int i = 0; i < 16; i++)
         {
-            window.draw(piecesShape[i]);
+            if (players[i / 4] != nullptr)
+                window.draw(piecesShape[i]);
         }
         window.display();
     }
@@ -228,9 +247,9 @@ bool Match::movePossible(int id, int delta)
             }
             return false;
         }
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < 4; i++)
         {
-            if (pieces[id] + delta > 43 || (id / 4 == i / 4 && (pieces[id] + 10 * whoseTurn + delta) % 40 == (pieces[i] + 10 * (i / 4)) % 40 && pieces[i] > -1 && pieces[i] < 40))
+            if (pieces[id] + delta > 43 || pieces[id] + delta == pieces[whoseTurn * 4 + i])
                 return false;
         }
         return true;
@@ -247,25 +266,25 @@ void Match::movePiece(int id, int delta)
     else
     {
         pieces[id] += delta;
-        if (pieces[id] < 40)
+    }
+    if (pieces[id] < 40)
+    {
+        for (int i = 0; i < 16; i++)
         {
-            for (int i = 0; i < 16; i++)
+            if (id / 4 != i / 4)
             {
-                if (id / 4 != i / 4)
+                if ((pieces[id] + 10 * whoseTurn) % 40 == (pieces[i] + 10 * (i / 4)) % 40 && pieces[i] < 40)
                 {
-                    if ((pieces[id] + 10 * whoseTurn) % 40 == (pieces[i] + 10 * (i / 4)) % 40)
-                    {
-                        pieces[i] = -1;
-                        piecesShape[i].setPosition(holderTiles[i].getPosition());
-                        break;
-                    }
+                    pieces[i] = -1;
+                    piecesShape[i].setPosition(holderTiles[i].getPosition());
+                    break;
                 }
             }
         }
     }
     if (pieces[id] > 39)
     {
-        piecesShape[id].setPosition(homeTiles[whoseTurn * 4 + (pieces[id] - 39)].getPosition());
+        piecesShape[id].setPosition(homeTiles[whoseTurn * 4 + (pieces[id] - 40)].getPosition());
     }
     else
     {
