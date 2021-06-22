@@ -134,27 +134,30 @@ void Match::runMatch(sf::RenderWindow &window)
                 // check roll/next button
                 if (button.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
                 {
-                    // roll the dice
-                    if (diceResult == 0 && !finishedTurn)
+                    if (dynamic_cast<HumanPlayer *>(players[whoseTurn]))
                     {
-                        diceResult = rollDice();
-                        diceResultText.setString("Dice result: " + std::to_string(diceResult));
-                        bool canMove = false;
-                        for (int i = 0; i < 4; i++)
+                        // roll the dice
+                        if (diceResult == 0 && !finishedTurn)
                         {
-                            if (movePossible(4 * whoseTurn + i, diceResult))
+                            diceResult = rollDice();
+                            diceResultText.setString("Dice result: " + std::to_string(diceResult));
+                            bool canMove = false;
+                            for (int i = 0; i < 4; i++)
                             {
-                                canMove = true;
-                                break;
+                                if (movePossible(4 * whoseTurn + i, diceResult))
+                                {
+                                    canMove = true;
+                                    break;
+                                }
                             }
+                            if (!canMove)
+                            {
+                                diceResult = 0;
+                                finishedTurn = true;
+                                button.setString("Next");
+                            }
+                            break;
                         }
-                        if (!canMove)
-                        {
-                            diceResult = 0;
-                            finishedTurn = true;
-                            button.setString("Next");
-                        }
-                        break;
                     }
                     // move to next player
                     if (finishedTurn)
@@ -206,6 +209,10 @@ void Match::runMatch(sf::RenderWindow &window)
         }
         if (AIPlayer *pl = dynamic_cast<AIPlayer *>(players[whoseTurn]))
         {
+            if (!finishedTurn)
+            {
+                button.setString("");
+            }
             if (clock.getElapsedTime() > sf::milliseconds(1000))
             {
                 clock.restart();
