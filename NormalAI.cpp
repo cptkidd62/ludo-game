@@ -8,7 +8,7 @@ NormalAIPlayer::NormalAIPlayer()
 
 void NormalAIPlayer::makeMove(std::vector<int> &positions, int id, int delta)
 {
-    int ranks[4] = {4};
+    int ranks[4] = {4, 4, 4, 4};
     for (int i = 0; i < 4; i++)
     {
         if (positions[id * 4 + i] == -1)
@@ -50,7 +50,7 @@ void NormalAIPlayer::makeMove(std::vector<int> &positions, int id, int delta)
                         break;
                     }
                 }
-                else if (j / 4 == id && positions[id * 4 + i] == positions[j])
+                else if (j / 4 == id && positions[id * 4 + i] + delta == positions[j])
                 {
                     ranks[i] = 0;
                 }
@@ -67,7 +67,7 @@ void NormalAIPlayer::makeMove(std::vector<int> &positions, int id, int delta)
     {
         for (int i = 0; i < 16; i++)
         {
-            if (positions[i] != -1 && positions[i] < 40 && (positions[i] + (i / 4) * 10) % 40 == (id * 10) % 40)
+            if (i / 4 != id && positions[i] != -1 && positions[i] < 40 && (positions[i] + (i / 4) * 10) % 40 == (id * 10) % 40)
             {
                 positions[i] = -1;
                 break;

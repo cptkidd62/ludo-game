@@ -2,6 +2,7 @@
 #define MATCH_HPP
 
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include <cstdlib>
 #include <ctime>
 #include "HumanPlayer.hpp"

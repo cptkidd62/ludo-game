@@ -113,6 +113,9 @@ void Match::runMatch(sf::RenderWindow &window)
     button.setPosition(30, 170);
     button.setFillColor(sf::Color::Yellow);
 
+    // clock
+    sf::Clock clock;
+
     // game loop
     while (state == PLAY)
     {
@@ -201,50 +204,54 @@ void Match::runMatch(sf::RenderWindow &window)
                 }
             }
         }
-        if (AIPlayer* pl = dynamic_cast<AIPlayer*>(players[whoseTurn]))
+        if (AIPlayer *pl = dynamic_cast<AIPlayer *>(players[whoseTurn]))
         {
-            if (diceResult == 0 && !finishedTurn)
+            if (clock.getElapsedTime() > sf::milliseconds(1000))
             {
-                diceResult = rollDice();
-                diceResultText.setString("Dice result: " + std::to_string(diceResult));
-                bool canMove = false;
-                for (int i = 0; i < 4; i++)
+                clock.restart();
+                if (diceResult == 0 && !finishedTurn)
                 {
-                    if (movePossible(4 * whoseTurn + i, diceResult))
+                    diceResult = rollDice();
+                    diceResultText.setString("Dice result: " + std::to_string(diceResult));
+                    bool canMove = false;
+                    for (int i = 0; i < 4; i++)
                     {
-                        canMove = true;
-                        break;
+                        if (movePossible(4 * whoseTurn + i, diceResult))
+                        {
+                            canMove = true;
+                            break;
+                        }
+                    }
+                    if (!canMove)
+                    {
+                        diceResult = 0;
+                        finishedTurn = true;
+                        button.setString("Next");
                     }
                 }
-                if (!canMove)
+                else if (diceResult != 0 && !finishedTurn)
                 {
-                    diceResult = 0;
-                    finishedTurn = true;
-                    button.setString("Next");
-                }
-            }
-            else if (!finishedTurn)
-            {
-                pl->makeMove(pieces, whoseTurn, diceResult);
-                if (diceResult != 6)
-                {
-                    finishedTurn = true;
-                    button.setString("Next");
-                }
-                diceResult = 0;
-                bool condition = true;
-                for (int j = 0; j < 4; j++)
-                {
-                    if (pieces[4 * whoseTurn + j] < 40)
-                        condition = false;
-                }
-                if (condition)
-                {
-                    pl->setFinished();
-                    finishedCount++;
-                    if (finishedCount == playersNumber - 1)
+                    pl->makeMove(pieces, whoseTurn, diceResult);
+                    if (diceResult != 6)
                     {
-                        state = END;
+                        finishedTurn = true;
+                        button.setString("Next");
+                    }
+                    diceResult = 0;
+                    bool condition = true;
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (pieces[4 * whoseTurn + j] < 40)
+                            condition = false;
+                    }
+                    if (condition)
+                    {
+                        pl->setFinished();
+                        finishedCount++;
+                        if (finishedCount == playersNumber - 1)
+                        {
+                            state = END;
+                        }
                     }
                 }
             }
