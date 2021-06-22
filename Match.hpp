@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 #include "HumanPlayer.hpp"
+#include "NormalAI.hpp"
 
 class Match
 {
@@ -37,6 +38,7 @@ private:
     int rollDice();
     bool movePossible(int id, int delta);
     void movePiece(int id, int delta);
+    void updatePieces();
 };
 
 template <typename Base, typename T>

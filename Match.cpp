@@ -19,7 +19,10 @@ Match::Match(std::initializer_list<int> ps)
         }
         else if (*(ps.begin() + i) < 0)
         {
-            //TODO ai player
+            if (*(ps.begin() + i) == -1)
+            {
+                players.push_back(new NormalAIPlayer());
+            }
             playersNumber++;
         }
         else
@@ -198,8 +201,57 @@ void Match::runMatch(sf::RenderWindow &window)
                 }
             }
         }
+        if (AIPlayer* pl = dynamic_cast<AIPlayer*>(players[whoseTurn]))
+        {
+            if (diceResult == 0 && !finishedTurn)
+            {
+                diceResult = rollDice();
+                diceResultText.setString("Dice result: " + std::to_string(diceResult));
+                bool canMove = false;
+                for (int i = 0; i < 4; i++)
+                {
+                    if (movePossible(4 * whoseTurn + i, diceResult))
+                    {
+                        canMove = true;
+                        break;
+                    }
+                }
+                if (!canMove)
+                {
+                    diceResult = 0;
+                    finishedTurn = true;
+                    button.setString("Next");
+                }
+            }
+            else if (!finishedTurn)
+            {
+                pl->makeMove(pieces, whoseTurn, diceResult);
+                if (diceResult != 6)
+                {
+                    finishedTurn = true;
+                    button.setString("Next");
+                }
+                diceResult = 0;
+                bool condition = true;
+                for (int j = 0; j < 4; j++)
+                {
+                    if (pieces[4 * whoseTurn + j] < 40)
+                        condition = false;
+                }
+                if (condition)
+                {
+                    pl->setFinished();
+                    finishedCount++;
+                    if (finishedCount == playersNumber - 1)
+                    {
+                        state = END;
+                    }
+                }
+            }
+        }
 
         // drawing
+        updatePieces();
         window.clear();
         window.draw(currentPlayer);
         window.draw(diceResultText);
@@ -247,9 +299,11 @@ bool Match::movePossible(int id, int delta)
             }
             return false;
         }
+        if (pieces[id] + delta > 43)
+            return false;
         for (int i = 0; i < 4; i++)
         {
-            if (pieces[id] + delta > 43 || pieces[id] + delta == pieces[whoseTurn * 4 + i])
+            if (pieces[id] + delta == pieces[whoseTurn * 4 + i])
                 return false;
         }
         return true;
@@ -276,18 +330,28 @@ void Match::movePiece(int id, int delta)
                 if ((pieces[id] + 10 * whoseTurn) % 40 == (pieces[i] + 10 * (i / 4)) % 40 && pieces[i] < 40)
                 {
                     pieces[i] = -1;
-                    piecesShape[i].setPosition(holderTiles[i].getPosition());
                     break;
                 }
             }
         }
     }
-    if (pieces[id] > 39)
+}
+
+void Match::updatePieces()
+{
+    for (int i = 0; i < 16; i++)
     {
-        piecesShape[id].setPosition(homeTiles[whoseTurn * 4 + (pieces[id] - 40)].getPosition());
-    }
-    else
-    {
-        piecesShape[id].setPosition(boardTiles[(pieces[id] + 10 * whoseTurn) % 40].getPosition());
+        if (pieces[i] > 39)
+        {
+            piecesShape[i].setPosition(homeTiles[(i / 4) * 4 + (pieces[i] - 40)].getPosition());
+        }
+        else if (pieces[i] == -1)
+        {
+            piecesShape[i].setPosition(holderTiles[i].getPosition());
+        }
+        else
+        {
+            piecesShape[i].setPosition(boardTiles[(pieces[i] + 10 * (i / 4)) % 40].getPosition());
+        }
     }
 }
