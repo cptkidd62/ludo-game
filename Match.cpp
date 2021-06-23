@@ -23,6 +23,10 @@ Match::Match(std::initializer_list<int> ps)
             {
                 players.push_back(new NormalAIPlayer());
             }
+            if (*(ps.begin() + i) == -2)
+            {
+                players.push_back(new SimpleAIPlayer());
+            }
             playersNumber++;
         }
         else

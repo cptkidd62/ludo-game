@@ -35,6 +35,10 @@ void NormalAIPlayer::makeMove(std::vector<int> &positions, int id, int delta)
         }
         else
         {
+            if (positions[id * 4 + i] == 0)
+            {
+                ranks[i] = 5;
+            }
             for (int j = 0; j < 16; j++)
             {
                 if (positions[j] != -1 && positions[j] < 40 && positions[id * 4 + i] < 40 && (positions[id * 4 + i] + delta + id * 10) % 40 == (positions[j] + (j / 4) * 10) % 40)
@@ -79,7 +83,7 @@ void NormalAIPlayer::makeMove(std::vector<int> &positions, int id, int delta)
     {
         for (int i = 0; i < 16; i++)
         {
-            if (positions[i] != -1 && positions[i] < 40 && positions[id * 4 + move] < 40 && (positions[id * 4 + move] + delta + id * 10) % 40 == (positions[i] + (i / 4) * 10) % 40)
+            if (positions[i] != -1 && positions[i] < 40 && positions[id * 4 + move] + delta < 40 && (positions[id * 4 + move] + delta + id * 10) % 40 == (positions[i] + (i / 4) * 10) % 40)
             {
                 positions[i] = -1;
                 break;

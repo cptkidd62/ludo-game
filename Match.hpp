@@ -7,6 +7,7 @@
 #include <ctime>
 #include "HumanPlayer.hpp"
 #include "NormalAI.hpp"
+#include "SimpleAI.hpp"
 
 class Match
 {
