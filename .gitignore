@@ -32,4 +32,5 @@
 *.app
 
 # Other
-*.json
+.vscode/
+data/

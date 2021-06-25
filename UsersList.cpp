@@ -7,7 +7,7 @@ UsersList::UsersList()
 
 UsersList::~UsersList()
 {
-    
+    saveToFile();
 }
 
 bool UsersList::loadFromFile()
@@ -24,6 +24,25 @@ bool UsersList::loadFromFile()
             file >> str;
             list[id] = str;
             size++;
+        }
+        return true;
+    }
+    else
+    {
+        file.close();
+        return false;
+    }
+}
+
+bool UsersList::saveToFile()
+{
+    std::wofstream file;
+    file.open("data/users");
+    if (file.good())
+    {
+        for (auto p : list)
+        {
+            file << p.first << '\n' << p.second << '\n';
         }
         return true;
     }

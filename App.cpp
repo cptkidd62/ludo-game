@@ -210,13 +210,62 @@ int App::selectUser(int usrs[])
             {
                 return 0;
             }
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
+            {
+                addUser();
+            }
         }
-        
+
         window.clear();
         for (auto btn : buttons)
         {
             window.draw(btn);
         }
+        window.display();
+    }
+}
+
+void App::addUser()
+{
+    sf::Font font;
+    font.loadFromFile("resources/AmaticSC-Bold.ttf");
+    sf::String str(L"");
+    sf::Text name;
+    name.setFont(font);
+    name.setCharacterSize(30);
+    name.setFillColor(sf::Color::Yellow);
+    name.setString(str);
+    name.setPosition(100, 100);
+    while (true)
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
+            {
+                users.list[users.size] = str.toWideString();
+                users.size++;
+                return;
+            }
+            if (event.type == sf::Event::TextEntered)
+            {
+                if (event.text.unicode >= 32 && event.text.unicode <= 383)
+                {
+                    str.insert(str.getSize(), static_cast<wchar_t>(event.text.unicode));
+                }
+                if (event.text.unicode == 8)
+                {
+                    if (str.getSize() > 0)
+                    {
+                        str.erase(str.getSize() - 1, 1);
+                    }
+                }
+                name.setString(str);
+            }
+        }
+
+        window.clear();
+        window.draw(name);
         window.display();
     }
 }
