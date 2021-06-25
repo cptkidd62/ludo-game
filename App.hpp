@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Match.hpp"
+#include "UsersList.hpp"
 
 class App
 {
@@ -19,9 +20,11 @@ private:
     };
     AppState state;
     sf::RenderWindow window;
+    UsersList users;
 
     void menu();
     void startMatch();
+    int selectUser(int usrs[]);
 };
 
 #endif

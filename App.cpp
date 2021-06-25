@@ -137,6 +137,7 @@ void App::startMatch()
                             ptext[i][j].setFillColor(colors[i]);
                             if (j == 0)
                             {
+                                selectUser(list);
                                 list[i] = i + 1;
                                 count[i] = 1;
                             }
@@ -155,6 +156,10 @@ void App::startMatch()
                                 if (k != j)
                                 {
                                     ptext[i][k].setFillColor(sf::Color::White);
+                                    if (k == 0)
+                                    {
+                                        ptext[i][k].setString("Human");
+                                    }
                                 }
                             }
                         }
@@ -173,6 +178,45 @@ void App::startMatch()
             }
         }
         window.draw(start);
+        window.display();
+    }
+}
+
+int App::selectUser(int usrs[])
+{
+    sf::Font font;
+    font.loadFromFile("resources/AmaticSC-Bold.ttf");
+    std::vector<sf::Text> buttons;
+    sf::Text tmp;
+    tmp.setFont(font);
+    tmp.setCharacterSize(30);
+    tmp.setFillColor(sf::Color::Yellow);
+    tmp.setPosition(60, 10);
+    for (int i = 0; i < users.size; i++)
+    {
+        tmp.setString(users.list[i]);
+        tmp.move(0, 50);
+        buttons.push_back(tmp);
+    }
+    tmp.setString("Add new");
+    tmp.move(0, 50);
+    buttons.push_back(tmp);
+    while (true)
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape)
+            {
+                return 0;
+            }
+        }
+        
+        window.clear();
+        for (auto btn : buttons)
+        {
+            window.draw(btn);
+        }
         window.display();
     }
 }
