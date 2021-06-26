@@ -15,7 +15,6 @@ HumanPlayer::~HumanPlayer()
     {
         data->incVicts();
     }
-    data->saveToFile();
     delete data;
 }
 

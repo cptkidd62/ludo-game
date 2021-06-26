@@ -229,7 +229,7 @@ int App::selectUser(int usrs[])
                 {
                     if (buttons[i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
                     {
-                        if (i != usrs[0] && i != usrs[1] && i != usrs[2] && i != usrs[3])
+                        if (i + 1 != usrs[0] && i + 1 != usrs[1] && i + 1 != usrs[2] && i + 1 != usrs[3])
                         {
                             return i;
                         }

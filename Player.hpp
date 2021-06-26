@@ -7,6 +7,7 @@
 class Player
 {
 public:
+    virtual ~Player() = 0;
     std::wstring getName();
     bool hasFinished();
     void setFinished();
@@ -18,5 +19,7 @@ protected:
     bool finished;
     bool won;
 };
+
+inline Player::~Player() {};
 
 #endif

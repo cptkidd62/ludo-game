@@ -13,6 +13,7 @@ class Match
 {
 public:
     Match(std::initializer_list<int> ps);
+    ~Match();
 
     void runMatch(sf::RenderWindow &window);
 

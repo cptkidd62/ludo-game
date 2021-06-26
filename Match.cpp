@@ -89,6 +89,15 @@ Match::Match(std::initializer_list<int> ps)
     state = PLAY;
 }
 
+Match::~Match()
+{
+    for (Player *p : players)
+    {
+        if (p != nullptr)
+            delete p;
+    }
+}
+
 void Match::runMatch(sf::RenderWindow &window)
 {
     // loading font
