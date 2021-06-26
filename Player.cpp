@@ -14,3 +14,8 @@ void Player::setFinished()
 {
     finished = true;
 }
+
+void Player::setWon()
+{
+    won = true;
+}

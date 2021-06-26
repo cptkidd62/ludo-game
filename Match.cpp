@@ -14,7 +14,7 @@ Match::Match(std::initializer_list<int> ps)
     {
         if (*(ps.begin() + i) > 0)
         {
-            players.push_back(new HumanPlayer(L"Człowiek " + std::to_wstring(i + 1)));
+            players.push_back(new HumanPlayer(*(ps.begin() + i) - 1));
             playersNumber++;
         }
         else if (*(ps.begin() + i) < 0)
@@ -199,6 +199,10 @@ void Match::runMatch(sf::RenderWindow &window)
                             if (condition)
                             {
                                 players[whoseTurn]->setFinished();
+                                if (finishedCount == 0)
+                                {
+                                    players[whoseTurn]->setWon();
+                                }
                                 finishedCount++;
                                 if (finishedCount == playersNumber - 1)
                                 {

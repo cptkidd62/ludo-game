@@ -134,7 +134,6 @@ void App::startMatch()
                     {
                         if (ptext[i][j].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
                         {
-                            ptext[i][j].setFillColor(colors[i]);
                             if (j == 0)
                             {
                                 int res = selectUser(list);
@@ -145,6 +144,7 @@ void App::startMatch()
                                     ptext[i][0].setString(users.list[res]);
                                     ptext[i][1].setFillColor(sf::Color::White);
                                     ptext[i][2].setFillColor(sf::Color::White);
+                                    ptext[i][j].setFillColor(colors[i]);
                                 }
                             }
                             else if (j == 1)
@@ -154,6 +154,7 @@ void App::startMatch()
                                 ptext[i][0].setString("Human");
                                 ptext[i][0].setFillColor(sf::Color::White);
                                 ptext[i][2].setFillColor(sf::Color::White);
+                                ptext[i][j].setFillColor(colors[i]);
                             }
                             else
                             {
@@ -162,6 +163,7 @@ void App::startMatch()
                                 ptext[i][0].setString("Human");
                                 ptext[i][0].setFillColor(sf::Color::White);
                                 ptext[i][1].setFillColor(sf::Color::White);
+                                ptext[i][j].setFillColor(colors[i]);
                             }
                         }
                     }
@@ -235,10 +237,13 @@ int App::selectUser(int usrs[])
                 }
                 if (buttons[buttons.size() - 1].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
                 {
-                    buttons[buttons.size() - 1].setString(users.list[buttons.size() - 1]);
-                    tmp.setString("Add new");
-                    tmp.move(0, 50);
-                    buttons.push_back(tmp);
+                    if (addUser())
+                    {
+                        buttons[buttons.size() - 1].setString(users.list[buttons.size() - 1]);
+                        tmp.setString("Add new");
+                        tmp.move(0, 50);
+                        buttons.push_back(tmp);
+                    }
                 }
             }
         }
@@ -271,6 +276,7 @@ bool App::addUser()
             if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter && !str.isEmpty())
             {
                 users.list[users.size] = str.toWideString();
+                UserData(users.size, users.list[users.size]);
                 users.size++;
                 return true;
             }

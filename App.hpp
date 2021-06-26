@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Match.hpp"
 #include "UsersList.hpp"
+#include "UserData.hpp"
 
 class App
 {
