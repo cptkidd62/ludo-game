@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Match.hpp"
+#include "Stats.hpp"
 #include "UsersList.hpp"
 #include "UserData.hpp"
 
@@ -17,6 +18,7 @@ private:
     {
         MENU,
         MATCH,
+        STATS,
         EXIT
     };
     AppState state;
@@ -25,6 +27,7 @@ private:
 
     void menu();
     void startMatch();
+    void showStats();
     int selectUser(int usrs[]);
     bool addUser();
 };

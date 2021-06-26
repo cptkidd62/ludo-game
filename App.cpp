@@ -20,6 +20,10 @@ void App::appLoop()
             startMatch();
             break;
 
+        case STATS:
+            showStats();
+            break;
+
         default:
             break;
         }
@@ -56,6 +60,11 @@ void App::menu()
             if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
             {
                 state = MATCH;
+                break;
+            }
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
+            {
+                state = STATS;
                 break;
             }
         }
@@ -183,6 +192,13 @@ void App::startMatch()
         window.draw(start);
         window.display();
     }
+}
+
+void App::showStats()
+{
+    Stats stats(users);
+    stats.runStats(window);
+    state = MENU;
 }
 
 int App::selectUser(int usrs[])

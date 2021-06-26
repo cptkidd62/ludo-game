@@ -2,9 +2,11 @@
 #define USERDATA_HPP
 
 #include <fstream>
+#include "StatsView.hpp"
 
 class UserData
 {
+    friend class StatsView;
 public:
     UserData(int id);
     UserData(int id, std::wstring name);
