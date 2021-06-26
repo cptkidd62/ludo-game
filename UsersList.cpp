@@ -42,7 +42,7 @@ bool UsersList::saveToFile()
     {
         for (auto p : list)
         {
-            file << p.first << '\n' << p.second << '\n';
+            file << ' ' << p.first << ' ' << p.second;
         }
         return true;
     }
