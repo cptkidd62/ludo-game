@@ -25,7 +25,7 @@ private:
     void menu();
     void startMatch();
     int selectUser(int usrs[]);
-    void addUser();
+    bool addUser();
 };
 
 #endif

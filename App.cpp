@@ -137,30 +137,31 @@ void App::startMatch()
                             ptext[i][j].setFillColor(colors[i]);
                             if (j == 0)
                             {
-                                selectUser(list);
-                                list[i] = i + 1;
-                                count[i] = 1;
+                                int res = selectUser(list);
+                                if (res > -1)
+                                {
+                                    list[i] = res + 1;
+                                    count[i] = 1;
+                                    ptext[i][0].setString(users.list[res]);
+                                    ptext[i][1].setFillColor(sf::Color::White);
+                                    ptext[i][2].setFillColor(sf::Color::White);
+                                }
                             }
                             else if (j == 1)
                             {
                                 list[i] = -1;
                                 count[i] = 1;
+                                ptext[i][0].setString("Human");
+                                ptext[i][0].setFillColor(sf::Color::White);
+                                ptext[i][2].setFillColor(sf::Color::White);
                             }
                             else
                             {
                                 list[i] = 0;
                                 count[i] = 0;
-                            }
-                            for (int k = 0; k < 3; k++)
-                            {
-                                if (k != j)
-                                {
-                                    ptext[i][k].setFillColor(sf::Color::White);
-                                    if (k == 0)
-                                    {
-                                        ptext[i][k].setString("Human");
-                                    }
-                                }
+                                ptext[i][0].setString("Human");
+                                ptext[i][0].setFillColor(sf::Color::White);
+                                ptext[i][1].setFillColor(sf::Color::White);
                             }
                         }
                     }
@@ -208,11 +209,37 @@ int App::selectUser(int usrs[])
         {
             if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape)
             {
-                return 0;
+                return -1;
             }
             if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
             {
-                addUser();
+                if (addUser())
+                {
+                    buttons[buttons.size() - 1].setString(users.list[buttons.size() - 1]);
+                    tmp.setString("Add new");
+                    tmp.move(0, 50);
+                    buttons.push_back(tmp);
+                }
+            }
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+            {
+                for (int i = 0; i < (int)buttons.size() - 1; i++)
+                {
+                    if (buttons[i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                    {
+                        if (i != usrs[0] && i != usrs[1] && i != usrs[2] && i != usrs[3])
+                        {
+                            return i;
+                        }
+                    }
+                }
+                if (buttons[buttons.size() - 1].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                {
+                    buttons[buttons.size() - 1].setString(users.list[buttons.size() - 1]);
+                    tmp.setString("Add new");
+                    tmp.move(0, 50);
+                    buttons.push_back(tmp);
+                }
             }
         }
 
@@ -225,7 +252,7 @@ int App::selectUser(int usrs[])
     }
 }
 
-void App::addUser()
+bool App::addUser()
 {
     sf::Font font;
     font.loadFromFile("resources/AmaticSC-Bold.ttf");
@@ -241,11 +268,15 @@ void App::addUser()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter && !str.isEmpty())
             {
                 users.list[users.size] = str.toWideString();
                 users.size++;
-                return;
+                return true;
+            }
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape)
+            {
+                return false;
             }
             if (event.type == sf::Event::TextEntered)
             {
