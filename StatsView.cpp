@@ -28,7 +28,7 @@ StatsView::StatsView(int id)
     }
     else
     {
-        percentage.setString("Rate: " + std::to_string(data.victories * 10 / data.games) + "%");
+        percentage.setString("Rate: " + std::to_string(data.victories * 100.0 / data.games) + "%");
     }
     percentage.setPosition(700, 10 + 40 * id);
 }

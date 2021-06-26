@@ -215,6 +215,14 @@ void Match::runMatch(sf::RenderWindow &window)
                                 finishedCount++;
                                 if (finishedCount == playersNumber - 1)
                                 {
+                                    for (Player* p : players)
+                                    {
+                                        if (p != nullptr && p->hasWon())
+                                        {
+                                            showWinner(p->getName(), window);
+                                            break;
+                                        }
+                                    }
                                     state = END;
                                 }
                             }
@@ -384,5 +392,36 @@ void Match::updatePieces()
         {
             piecesShape[i].setPosition(boardTiles[(pieces[i] + 10 * (i / 4)) % 40].getPosition());
         }
+    }
+}
+
+void Match::showWinner(std::wstring name, sf::RenderWindow &window)
+{
+    // loading font
+    sf::Font font;
+    font.loadFromFile("resources/AmaticSC-Bold.ttf");
+
+    // creating texts
+    sf::Text text;
+    text.setString(name + L" won\nPress ENTER to continue");
+    text.setFont(font);
+    text.setCharacterSize(30);
+    text.setPosition(30, 30);
+    text.setFillColor(sf::Color::Yellow);
+
+    while (true)
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter)
+            {
+                return;
+            }
+        }
+
+        window.clear();
+        window.draw(text);
+        window.display();
     }
 }

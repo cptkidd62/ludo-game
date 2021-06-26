@@ -15,6 +15,11 @@ void Player::setFinished()
     finished = true;
 }
 
+bool Player::hasWon()
+{
+    return finished;
+}
+
 void Player::setWon()
 {
     won = true;

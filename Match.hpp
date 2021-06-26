@@ -42,6 +42,8 @@ private:
     bool movePossible(int id, int delta);
     void movePiece(int id, int delta);
     void updatePieces();
+
+    void showWinner(std::wstring name, sf::RenderWindow &window);
 };
 
 template <typename Base, typename T>

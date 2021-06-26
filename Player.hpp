@@ -11,6 +11,7 @@ public:
     std::wstring getName();
     bool hasFinished();
     void setFinished();
+    bool hasWon();
     void setWon();
     virtual void makeMove(std::vector<int> &positions, int id, int delta) = 0;
 
