@@ -111,7 +111,7 @@ void Match::runMatch(sf::RenderWindow &window)
     currentPlayer.setFont(font);
     currentPlayer.setCharacterSize(30);
     currentPlayer.setPosition(30, 30);
-    currentPlayer.setFillColor(sf::Color::Yellow);
+    currentPlayer.setFillColor(colors[whoseTurn]);
 
     sf::Text diceResultText;
     diceResultText.setString("");
@@ -181,6 +181,7 @@ void Match::runMatch(sf::RenderWindow &window)
                             whoseTurn = (whoseTurn + 1) % 4;
                         } while (players[whoseTurn] == nullptr || players[whoseTurn]->hasFinished());
                         currentPlayer.setString(players[whoseTurn]->getName() + L"'s turn");
+                        currentPlayer.setFillColor(colors[whoseTurn]);
                         diceResultText.setString("");
                         finishedTurn = false;
                         button.setString("Roll the dice");
@@ -216,7 +217,7 @@ void Match::runMatch(sf::RenderWindow &window)
                                 finishedCount++;
                                 if (finishedCount == playersNumber - 1)
                                 {
-                                    for (Player* p : players)
+                                    for (Player *p : players)
                                     {
                                         if (p != nullptr && p->hasWon())
                                         {

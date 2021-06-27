@@ -39,8 +39,30 @@ void App::menu()
     sf::Text title;
     title.setString("Ludo Game");
     title.setFont(font);
-    title.setCharacterSize(30);
+    title.setCharacterSize(100);
     title.setFillColor(sf::Color::Yellow);
+    title.setPosition(window.getSize().x / 2 - title.getGlobalBounds().width / 2, 100);
+
+    sf::Text newGame;
+    newGame.setString("Play");
+    newGame.setFont(font);
+    newGame.setCharacterSize(50);
+    newGame.setFillColor(sf::Color::Yellow);
+    newGame.setPosition(window.getSize().x / 2 - newGame.getGlobalBounds().width / 2, 300);
+
+    sf::Text stat;
+    stat.setString("Statistics");
+    stat.setFont(font);
+    stat.setCharacterSize(50);
+    stat.setFillColor(sf::Color::Yellow);
+    stat.setPosition(window.getSize().x / 2 - stat.getGlobalBounds().width / 2, 400);
+
+    sf::Text quit;
+    quit.setString("Exit");
+    quit.setFont(font);
+    quit.setCharacterSize(50);
+    quit.setFillColor(sf::Color::Yellow);
+    quit.setPosition(window.getSize().x / 2 - quit.getGlobalBounds().width / 2, 500);
 
     while (state == MENU)
     {
@@ -73,10 +95,35 @@ void App::menu()
                 state = STATS;
                 break;
             }
+            // clicked
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+            {
+                // run match
+                if (newGame.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                {
+                    state = MATCH;
+                    break;
+                }
+                // open stats window
+                if (stat.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                {
+                    state = STATS;
+                    break;
+                }
+                // exit
+                if (quit.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                {
+                    state = EXIT;
+                    break;
+                }
+            }
         }
 
         window.clear();
         window.draw(title);
+        window.draw(newGame);
+        window.draw(stat);
+        window.draw(quit);
         window.display();
     }
 }
@@ -90,17 +137,18 @@ void App::startMatch()
     int count[] = {1, 1, 1, 1};
 
     // sf texts
-    sf::Text title;
-    title.setString("New Game");
-    title.setFont(font);
-    title.setCharacterSize(30);
-    title.setFillColor(sf::Color::Yellow);
+    sf::Text quit;
+    quit.setString("Back");
+    quit.setFont(font);
+    quit.setCharacterSize(50);
+    quit.setFillColor(sf::Color::Yellow);
+    quit.setPosition(600, 500);
     sf::Text start;
     start.setString("Play");
     start.setFont(font);
-    start.setCharacterSize(30);
+    start.setCharacterSize(50);
     start.setFillColor(sf::Color::Yellow);
-    start.setPosition(window.getSize().x / 2 - start.getGlobalBounds().width / 2, 720);
+    start.setPosition(600, 300);
 
     // table of 4 vectors of 3 texts each - buttons for selecting player
     std::vector<sf::Text> ptext[4];
@@ -156,6 +204,12 @@ void App::startMatch()
                     state = MENU;
                     break;
                 }
+                // return to menu
+                if (quit.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                {
+                    state = MENU;
+                    break;
+                }
                 // check all player texts
                 for (int i = 0; i < 4; i++)
                 {
@@ -205,7 +259,7 @@ void App::startMatch()
         }
 
         window.clear();
-        window.draw(title);
+        window.draw(quit);
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 3; j++)
@@ -231,17 +285,17 @@ int App::selectUser(int usrs[])
     std::vector<sf::Text> buttons;
     sf::Text tmp;
     tmp.setFont(font);
-    tmp.setCharacterSize(30);
+    tmp.setCharacterSize(50);
     tmp.setFillColor(sf::Color::Yellow);
-    tmp.setPosition(60, 10);
+    tmp.setPosition(100, 30);
     for (int i = 0; i < users.size; i++)
     {
         tmp.setString(users.list[i]);
-        tmp.move(0, 50);
+        tmp.move(0, 70);
         buttons.push_back(tmp);
     }
     tmp.setString("Add new");
-    tmp.move(0, 50);
+    tmp.move(0, 70);
     buttons.push_back(tmp);
 
     // window loop
@@ -262,7 +316,7 @@ int App::selectUser(int usrs[])
                 {
                     buttons[buttons.size() - 1].setString(users.list[buttons.size() - 1]);
                     tmp.setString("Add new");
-                    tmp.move(0, 50);
+                    tmp.move(0, 70);
                     buttons.push_back(tmp);
                 }
             }
@@ -287,7 +341,7 @@ int App::selectUser(int usrs[])
                     {
                         buttons[buttons.size() - 1].setString(users.list[buttons.size() - 1]);
                         tmp.setString("Add new");
-                        tmp.move(0, 50);
+                        tmp.move(0, 70);
                         buttons.push_back(tmp);
                     }
                 }
@@ -307,14 +361,21 @@ bool App::addUser()
 {
     // string for user name
     sf::String str(L"");
-    
+
     // texts
+    sf::Text title;
+    title.setFont(font);
+    title.setCharacterSize(50);
+    title.setFillColor(sf::Color::Yellow);
+    title.setString("Type your name and press Enter:");
+    title.setPosition(200, 200);
+
     sf::Text name;
     name.setFont(font);
-    name.setCharacterSize(30);
+    name.setCharacterSize(50);
     name.setFillColor(sf::Color::Yellow);
     name.setString(str);
-    name.setPosition(100, 100);
+    name.setPosition(200, 300);
 
     // window loop
     while (true)
@@ -355,6 +416,7 @@ bool App::addUser()
         }
 
         window.clear();
+        window.draw(title);
         window.draw(name);
         window.display();
     }
