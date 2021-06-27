@@ -298,6 +298,13 @@ int App::selectUser(int usrs[])
     tmp.move(0, 70);
     buttons.push_back(tmp);
 
+    sf::Text back;
+    back.setFont(font);
+    back.setCharacterSize(50);
+    back.setFillColor(sf::Color::Yellow);
+    back.setString("Back");
+    back.setPosition(800, 50);
+
     // window loop
     while (true)
     {
@@ -345,6 +352,11 @@ int App::selectUser(int usrs[])
                         buttons.push_back(tmp);
                     }
                 }
+                // return
+                if (back.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                {
+                    return -1;
+                }
             }
         }
 
@@ -353,6 +365,7 @@ int App::selectUser(int usrs[])
         {
             window.draw(btn);
         }
+        window.draw(back);
         window.display();
     }
 }
@@ -367,7 +380,7 @@ bool App::addUser()
     title.setFont(font);
     title.setCharacterSize(50);
     title.setFillColor(sf::Color::Yellow);
-    title.setString("Type your name and press Enter:");
+    title.setString("Type your name:");
     title.setPosition(200, 200);
 
     sf::Text name;
@@ -376,6 +389,20 @@ bool App::addUser()
     name.setFillColor(sf::Color::Yellow);
     name.setString(str);
     name.setPosition(200, 300);
+
+    sf::Text confirm;
+    confirm.setFont(font);
+    confirm.setCharacterSize(50);
+    confirm.setFillColor(sf::Color::Yellow);
+    confirm.setString("Confirm");
+    confirm.setPosition(200, 400);
+
+    sf::Text back;
+    back.setFont(font);
+    back.setCharacterSize(50);
+    back.setFillColor(sf::Color::Yellow);
+    back.setString("Back");
+    back.setPosition(200, 500);
 
     // window loop
     while (true)
@@ -413,11 +440,29 @@ bool App::addUser()
                 }
                 name.setString(str);
             }
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+            {
+                // if string !empty create new user
+                if (confirm.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) && !str.isEmpty())
+                {
+                    users.list[users.size] = str.toWideString();
+                    UserData(users.size, users.list[users.size]);
+                    users.size++;
+                    return true;
+                }
+                // return without creating new user
+                if (back.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+                {
+                    return false;
+                }
+            }
         }
 
         window.clear();
         window.draw(title);
         window.draw(name);
+        window.draw(confirm);
+        window.draw(back);
         window.display();
     }
 }
