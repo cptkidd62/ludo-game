@@ -38,7 +38,7 @@ std::wstring UserData::getName()
 bool UserData::loadFromFile()
 {
     std::wifstream file;
-    file.open("data/" + std::to_string(id) + ".ud");
+    file.open(std::to_string(id) + ".ud");
     if (file.good())
     {
         file >> name;
@@ -57,7 +57,7 @@ bool UserData::loadFromFile()
 bool UserData::saveToFile()
 {
     std::wofstream file;
-    file.open("data/" + std::to_string(id) + ".ud");
+    file.open(std::to_string(id) + ".ud");
     if (file.good())
     {
         file << name << " " << games << " " << victories;

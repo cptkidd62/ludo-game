@@ -13,7 +13,7 @@ UsersList::~UsersList()
 bool UsersList::loadFromFile()
 {
     std::wifstream file;
-    file.open("data/users");
+    file.open("users");
     if (file.good())
     {
         while (!file.eof())
@@ -37,7 +37,7 @@ bool UsersList::loadFromFile()
 bool UsersList::saveToFile()
 {
     std::wofstream file;
-    file.open("data/users");
+    file.open("users");
     if (file.good())
     {
         for (auto p : list)
