@@ -91,6 +91,7 @@ Match::Match(std::initializer_list<int> ps)
 
 Match::~Match()
 {
+    // delete players
     for (Player *p : players)
     {
         if (p != nullptr)
@@ -232,6 +233,7 @@ void Match::runMatch(sf::RenderWindow &window)
                 }
             }
         }
+        // make ai move if ai's turn
         if (AIPlayer *pl = dynamic_cast<AIPlayer *>(players[whoseTurn]))
         {
             if (!finishedTurn)
@@ -315,18 +317,23 @@ void Match::runMatch(sf::RenderWindow &window)
 
 int Match::rollDice()
 {
+    // random number from 1 to 6
     srand(time(0));
     return rand() % 6 + 1;
 }
 
 bool Match::movePossible(int id, int delta)
 {
+    // check if piece belongs to player
     if (id / 4 == whoseTurn)
     {
+        // if piece in holder
         if (pieces[id] == -1)
         {
+            // 6 on dice
             if (delta == 6)
             {
+                // check if no own player on 0 position
                 for (int i = 0; i < 4; i++)
                 {
                     if (pieces[whoseTurn * 4 + i] == 0)
@@ -338,8 +345,10 @@ bool Match::movePossible(int id, int delta)
             }
             return false;
         }
+        // after move beyond board
         if (pieces[id] + delta > 43)
             return false;
+        // check for collision with own pieces
         for (int i = 0; i < 4; i++)
         {
             if (pieces[id] + delta == pieces[whoseTurn * 4 + i])
@@ -352,14 +361,17 @@ bool Match::movePossible(int id, int delta)
 
 void Match::movePiece(int id, int delta)
 {
+    // move from holder to position 0
     if (pieces[id] == -1)
     {
         pieces[id] = 0;
     }
+    // move += dice result
     else
     {
         pieces[id] += delta;
     }
+    // check for collision with other player's pieces
     if (pieces[id] < 40)
     {
         for (int i = 0; i < 16; i++)
@@ -378,16 +390,20 @@ void Match::movePiece(int id, int delta)
 
 void Match::updatePieces()
 {
+    // update pieces' circle's positions
     for (int i = 0; i < 16; i++)
     {
+        // home
         if (pieces[i] > 39)
         {
             piecesShape[i].setPosition(homeTiles[(i / 4) * 4 + (pieces[i] - 40)].getPosition());
         }
+        // holder
         else if (pieces[i] == -1)
         {
             piecesShape[i].setPosition(holderTiles[i].getPosition());
         }
+        // other
         else
         {
             piecesShape[i].setPosition(boardTiles[(pieces[i] + 10 * (i / 4)) % 40].getPosition());

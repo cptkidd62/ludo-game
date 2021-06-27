@@ -2,6 +2,7 @@
 
 Stats::Stats(const UsersList &users)
 {
+    // create statsviews from user data
     for (auto u : users.list)
     {
         StatsView view(u.first);
@@ -16,6 +17,7 @@ void Stats::runStats(sf::RenderWindow &window)
         sf::Event event;
         while (window.pollEvent(event))
         {
+            // return
             if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape)
             {
                 return;

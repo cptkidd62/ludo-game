@@ -23,6 +23,7 @@ private:
     };
     AppState state;
     sf::RenderWindow window;
+    sf::Font font;
     UsersList users;
 
     void menu();

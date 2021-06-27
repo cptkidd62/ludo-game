@@ -11,6 +11,7 @@ HumanPlayer::HumanPlayer(int id)
 
 HumanPlayer::~HumanPlayer()
 {
+    // increase victories number if won a match
     if (won)
     {
         data->incVicts();
